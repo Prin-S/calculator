@@ -1,0 +1,21 @@
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 600px;
+  }
+
+.flex-container div {
+    background: peachpuff;
+    box-shadow: inset 0px 0px 0px 1px #fff;
+    height: 150px;
+    flex: 1 1 25%;
+}
+
+.flex-container #display {
+    flex: 4 1 100%;
+}
+
+.flex-container #blank {
+    flex: 2 1 50%;
+}
+
