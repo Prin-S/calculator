@@ -7,7 +7,7 @@
 .flex-container div {
     background: peachpuff;
     box-shadow: inset 0px 0px 0px 1px #fff;
-    height: 150px;
+    height: 50px;
     flex: 1 1 25%;
 }
 
@@ -17,5 +17,9 @@
 
 .flex-container #blank {
     flex: 2 1 50%;
+}
+
+.operator_button {
+    filter: brightness(100%);
 }
 
