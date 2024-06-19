@@ -1,3 +1,7 @@
+let num1 = 0;
+let operator = '';
+let num2 = 0;
+
 function add(num1, num2) {
     return Number(num1) + Number(num2);
 }
@@ -14,11 +18,6 @@ function divide(num1, num2) {
     return Number(num1) / Number(num2);
 }
 
-let num1 = 0;
-let num2 = 0;
-let operator = '';
-let tempnum = 0;
-
 function operate(num1, operator, num2) {
     if (operator == 'plus') {
         return add(num1, num2);
@@ -31,22 +30,29 @@ function operate(num1, operator, num2) {
     }
 }
 
-const container = document.querySelector('#container');
 const display = document.querySelector('#display');
 const numButtons = document.querySelectorAll('.button');
 const operatorButtons = document.querySelectorAll('.operator_button');
 const equals = document.querySelector('#equals');
+const clear = document.querySelector('#clear');
 
 numButtons.forEach(button => {
     button.addEventListener('click', showValue.bind(this, button));
 });
 
 function showValue(button) {
-    display.textContent = button.innerText;
-    if (operator == '') {
-        tempnum = button.innerText;
+    if (display.textContent == 0) {
+        display.textContent = button.innerText;
+    } else if (num1 != 0 && operator != '' && num2 == 0) {
+        display.textContent = button.innerText;
     } else {
-        num2 = button.innerText;
+        display.textContent += button.innerText;
+    }
+    
+    if (operator == '') {
+        num1 = Number(display.textContent);
+    } else {
+        num2 = Number(display.textContent);
     }
 }
 
@@ -56,12 +62,42 @@ operatorButtons.forEach(button => {
 
 function highlight(button) {
     button.style.filter = 'brightness(80%)';
-    num1 = tempnum;
-    operator = button.id;
+    
+    if (num1 != 0 && num2 == 0) {
+        display.textContent = button.innerText;
+        operator = button.id;
+    }
+
+    if (num2 != 0) {
+        display.textContent = checkDecimal(num1, operator, num2);
+        num1 = Number(display.textContent);
+        operator = button.id;
+        num2 = 0;
+    }
 }
 
-equals.addEventListener('click', calculate.bind(this, equals));
+equals.addEventListener('click', calculate.bind());
 
-function calculate(button) {
-    display.textContent = operate(num1, operator, num2);
+function calculate() {
+    display.textContent = checkDecimal(num1, operator, num2);
+    num1 = Number(display.textContent);
+    operator = '';
+    num2 = 0;
+}
+
+function checkDecimal(num1, operator, num2) {
+    if (operate(num1, operator, num2) % 1 == 0) {
+        return operate(num1, operator, num2);
+    } else {
+        return operate(num1, operator, num2).toFixed(2);
+    }
+}
+
+clear.addEventListener('click', clearScreen.bind());
+
+function clearScreen() {
+    display.textContent = 0;
+    num1 = 0;
+    operator = '';
+    num2 = 0;
 }
