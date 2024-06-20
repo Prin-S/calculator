@@ -5,7 +5,6 @@
   }
 
 .flex-container div {
-    background: peachpuff;
     box-shadow: inset 0px 0px 0px 1px #fff;
     height: 50px;
     flex: 1 1 25%;
@@ -19,7 +18,24 @@
     flex: 2 1 50%;
 }
 
+#display {
+    background: lightblue;
+}
+
+#clear {
+    background: grey;
+}
+
+.button, #decimal, #backspace {
+    background: peachpuff;
+}
+
 .operator_button {
+    background: orange;
     filter: brightness(100%);
+}
+
+#equals {
+    background: orangered;
 }
 
