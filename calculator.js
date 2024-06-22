@@ -33,9 +33,12 @@ function operate(num1, operator, num2) {
 const display = document.querySelector('#display');
 const numButtons = document.querySelectorAll('.button');
 const operatorButtons = document.querySelectorAll('.operator_button');
+const plusButton = document.querySelector('#plus');
+const minusButton = document.querySelector('#minus');
+const timesButton = document.querySelector('#times');
+const divideButton = document.querySelector('#divide');
 const equals = document.querySelector('#equals');
 const clear = document.querySelector('#clear');
-const decimal = document.querySelector('#decimal');
 const backspace = document.querySelector('#backspace');
 
 function changeColorIn(button) {
@@ -46,11 +49,33 @@ function changeColorOut(button) {
     button.style.filter = 'brightness(100%)';
 }
 
-function clearOperatorButtons() {
+function clearOperatorButtons() { // Change operator buttons to default color
     operatorButtons.forEach(button => {
         button.style.background = 'orange';
     });
 }
+
+document.addEventListener('keydown', function(event) { // Keyboard control
+    if (event.key == '1' || event.key == '2' || event.key == '3' || event.key == '4' || event.key == '5' ||
+        event.key == '6' || event.key == '7' || event.key == '8' || event.key == '9' || event.key == '0' ||
+        event.key == '.') {
+        showNum(event);
+    } else if (event.key == '+') {
+        selectOperator(plusButton);
+    } else if (event.key == '-') {
+        selectOperator(minusButton);
+    } else if (event.key == '*') {
+        selectOperator(timesButton);
+    } else if (event.key == '/') {
+        selectOperator(divideButton);
+    } else if (event.key == '=' || event.key == 'Enter') {
+        calculate();
+    } else if (event.key == 'c') {
+        clearScreen();
+    } else if (event.key == 'Backspace') {
+        deleteNum();
+    }
+  });
 
 numButtons.forEach(button => {
     button.addEventListener('mouseover', changeColorIn.bind(this, button));
@@ -61,13 +86,22 @@ numButtons.forEach(button => {
 function showNum(button) {
     clearOperatorButtons();
 
-    if (display.textContent == 0 || (num1 != 0 && operator != '' && num2 == null)) {
+    if (button.key) { // In case number is entered through keyboard
+        button.innerText = button.key;
+    }
+
+    if ((display.textContent == '0' || (num1 != 0 && operator != '' && num2 == null)) && button.innerText == '.') { // If decimal is entered when number is empty,
+        // show 0 before it
+        display.textContent = '0.';
+    } else if (display.textContent == '0' || (num1 != 0 && operator != '' && num2 == null)) { // When first or second number has not been entered
         display.textContent = button.innerText;
+    } else if (display.textContent.includes('.') && button.innerText == '.') { // Prevent more than one decimal
+        display.textContent;
     } else {
         display.textContent += button.innerText;
     }
     
-    if (operator == '') {
+    if (operator == '') { // If no operator is selected, assign number to num1
         num1 = Number(display.textContent);
     } else {
         num2 = Number(display.textContent);
@@ -82,15 +116,15 @@ operatorButtons.forEach(button => {
 
 function selectOperator(button) {
     clearOperatorButtons();
-    button.style.background = 'lightgreen';
-    
+    button.style.background = 'lightgreen'; // Highlight selected operator
+
     if (num1 != 0 && num2 == null) {
         display.textContent = button.innerText;
         operator = button.id;
     }
 
     if (num2 != null) {
-        display.textContent = checkDecimal(num1, operator, num2);
+        display.textContent = checkDecimal(num1, operator, num2); // Calculate if first and second number are entered and operator is selected 
         num1 = Number(display.textContent);
         operator = button.id;
         num2 = null;
@@ -108,7 +142,7 @@ function calculate() {
         num2 = num1;
     }
 
-    if (operator == '') {
+    if (operator == '') { // If no operator is selected and calculate button is pressed
         display.textContent = num1;
     } else {
         display.textContent = checkDecimal(num1, operator, num2);
@@ -120,12 +154,15 @@ function calculate() {
 }
 
 function checkDecimal(num1, operator, num2) {
-    if (operate(num1, operator, num2) % 1 == 0 || String(operate(num1, operator, num2).toFixed(2)).slice(-1) == 0) {
+    if (operate(num1, operator, num2).toFixed(3) % 1 == 0 && String(operate(num1, operator, num2)).includes('.')) { // If result contains only 0 when rounded to three
+        // decimal places, return number with zero decimal places
+        return operate(num1, operator, num2).toFixed(0);
+    } else if (operate(num1, operator, num2) % 1 == 0) { // If result has no decimal numbers
         return operate(num1, operator, num2);
-    } else if (operator == 'divide' && num2 == 0) {
+    } else if (operator == 'divide' && num2 == 0) { // Prevent division by 0
         return 'Error!';
     } else {
-        return operate(num1, operator, num2).toFixed(2);
+        return operate(num1, operator, num2).toFixed(3);
     }
 }
 
@@ -147,7 +184,7 @@ backspace.addEventListener('click', deleteNum.bind());
 
 function deleteNum() {
     clearOperatorButtons();
-    display.textContent = display.textContent.slice(0, -1);
+    display.textContent = display.textContent.slice(0, -1); // Delete the last number entered
 
     if (num2 == null) {
         num1 = display.textContent;

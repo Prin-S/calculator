@@ -2,16 +2,21 @@
     display: flex;
     flex-wrap: wrap;
     width: 600px;
-  }
+}
 
 .flex-container div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     box-shadow: inset 0px 0px 0px 1px #fff;
     height: 50px;
     flex: 1 1 25%;
 }
 
 .flex-container #display {
+    justify-content: right;
     flex: 4 1 100%;
+    padding-right: 5%;
 }
 
 .flex-container #blank {
